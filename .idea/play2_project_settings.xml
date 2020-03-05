@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Play2ExcludedModulesSettings">
+    <option name="INFO">
+      <map>
+        <entry key="play-gradle">
+          <value>
+            <ProjectSettingsEntry>
+              <option name="playDistrPath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.typesafe.play/play_2.12/2.6.7/204d13256db3b77f721d4b2597ac24bc1a6e1ab8/play_2.12-2.6.7.jar" />
+            </ProjectSettingsEntry>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
