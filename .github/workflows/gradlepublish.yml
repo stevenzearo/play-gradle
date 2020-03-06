@@ -21,7 +21,7 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
     - name: Set Up Gradle
-      run: sudo apt-get update; sudo apt-get install gradle-5.6.2;
+      run: sudo apt-get update; sudo apt-get install gradle=5.6.2;
     - name: Build with Gradle
       run: gradle build
       env:
