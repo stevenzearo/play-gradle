@@ -38,6 +38,10 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+pluginBundle {
+    publishPlugins
+}
+
 publishPlugins {
     if (!System.getenv("CI").equals(null) && !System.getenv("CI").isEmpty()) {
         useAutomatedPublishing()
