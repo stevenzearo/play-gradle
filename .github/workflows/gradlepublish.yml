@@ -15,12 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 12
-      uses: actions/setup-env@v1
+      uses: actions/setup-java@v1
       with:
         java-version: 12
-        gradle-version: 5.6.2
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
+    - name: Set Up Gradle
+      run: apt-get update; apt-get install gradle-5.6.2;
     - name: Build with Gradle
       run: gradle build
 
