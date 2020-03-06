@@ -21,10 +21,12 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
     - name: Set Up Gradle
-      run: apt-get update; apt-get install gradle-5.6.2;
+      run: sudo apt-get update; sudo apt-get install gradle-5.6.2;
     - name: Build with Gradle
       run: gradle build
-
+      env:
+        USERNAME: ${{ github.actor }}
+        PASSWORD: ${{ secrets.GITHUB_TOKEN }}
     # The USERNAME and PASSWORD need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
     - name: Publish to GitHub Packages
