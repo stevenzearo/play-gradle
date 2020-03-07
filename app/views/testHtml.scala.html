@@ -1,3 +1,8 @@
-@(messages: String)(implicit assetFinder: AssetsFinder)
+@(message: String)(userInfoHtml: Html)(implicit assetFinder: AssetsFinder)
 <!--隐式参数-->
-"hello, @messages!"
+<html lang="en">
+    <body>
+        <h1>hello, @message!</h1>
+        @userInfoHtml
+    </body>
+</html>

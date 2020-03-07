@@ -1,15 +1,16 @@
 package controllers
 
 import javax.inject._
-
 import play.api.mvc._
+import play.twirl.api.Html
+import services.ApplicationDatabase
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) (implicit assetsFinder: AssetsFinder)
+class HomeController @Inject()(cc: ControllerComponents, database: ApplicationDatabase)(implicit assetsFinder: AssetsFinder)
   extends AbstractController(cc) {
 
   /**
@@ -23,6 +24,7 @@ class HomeController @Inject()(cc: ControllerComponents) (implicit assetsFinder:
   }
 
   def testHtml: Action[AnyContent] = Action {
-    Ok(views.html.testHtml("steve"))
+    val userInfoStr: String = database.userInfos().map(userInfo => s"<p>$userInfo</p>").reduce(_ + _)
+    Ok(views.html.testHtml("steve")(Html((s"<div>$userInfoStr</div>"))))
   }
 }
