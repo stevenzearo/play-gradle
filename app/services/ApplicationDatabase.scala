@@ -1,5 +1,7 @@
 package services
 
+import java.sql.PreparedStatement
+
 import domain.UserInfo
 import javax.inject.Inject
 import play.api.db.Database
@@ -12,10 +14,8 @@ import scala.collection.mutable
 class ApplicationDatabase @Inject()(implicit db: Database) {
   def userInfos(): mutable.ListBuffer[UserInfo] = {
     val userInfoList = new mutable.ListBuffer[UserInfo]
-    db.getConnection()
     db.withConnection { connection =>
-      val statement = connection.prepareStatement("select * from user_infos")
-      val map = "user_infos" -> [UserInfo]
+      val statement: PreparedStatement = connection.prepareStatement("select * from user_infos")
       statement.execute()
       val resultSet = statement.getResultSet
       while (resultSet.next()) {
