@@ -1,6 +1,6 @@
-import com.google.inject.AbstractModule
 import java.time.Clock
 
+import com.google.inject.AbstractModule
 import services.{ApplicationTimer, AtomicCounter, Counter}
 import util.{DBUtil, DBUtilImpl}
 
@@ -8,15 +8,14 @@ import util.{DBUtil, DBUtilImpl}
  * This class is a Guice module that tells Guice how to bind several
  * different types. This Guice module is created when the Play
  * application starts.
-
+ *
  * Play will automatically use any class called `Module` that is in
  * the root package. You can create modules in other locations by
  * adding `play.modules.enabled` settings to the `application.conf`
  * configuration file.
  */
 class Module extends AbstractModule {
-
-  override def configure() = {
+  override def configure = {
     // Use the system clock as the default implementation of Clock
     bind(classOf[DBUtil]).to(classOf[DBUtilImpl])
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
@@ -25,8 +24,5 @@ class Module extends AbstractModule {
     bind(classOf[ApplicationTimer]).asEagerSingleton()
     // Set AtomicCounter as the implementation for Counter.
     bind(classOf[Counter]).to(classOf[AtomicCounter])
-
-
   }
-
 }
