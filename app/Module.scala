@@ -2,6 +2,7 @@ import com.google.inject.AbstractModule
 import java.time.Clock
 
 import services.{ApplicationTimer, AtomicCounter, Counter}
+import util.{DBUtil, DBUtilImpl}
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -17,6 +18,7 @@ class Module extends AbstractModule {
 
   override def configure() = {
     // Use the system clock as the default implementation of Clock
+    bind(classOf[DBUtil]).to(classOf[DBUtilImpl])
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
     // Ask Guice to create an instance of ApplicationTimer when the
     // application starts.

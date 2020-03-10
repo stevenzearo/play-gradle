@@ -5,13 +5,14 @@ import java.sql.PreparedStatement
 import domain.UserInfo
 import javax.inject.Inject
 import play.api.db.Database
+import util.DBUtil
 
 import scala.collection.mutable
 
 /**
  * @author steve
  */
-class ApplicationDatabase @Inject()(implicit db: Database) {
+class ApplicationDatabase @Inject()(protected val dbUtil: DBUtil, db: Database) {
   def userInfos(): mutable.ListBuffer[UserInfo] = {
     val userInfoList = new mutable.ListBuffer[UserInfo]
     db.withConnection { connection =>
@@ -20,7 +21,7 @@ class ApplicationDatabase @Inject()(implicit db: Database) {
       val resultSet = statement.getResultSet
       while (resultSet.next()) {
         val info = new UserInfo
-        info.id = resultSet.getInt("id")
+        info.id = resultSet.getString("id")
         info.name = resultSet.getString("name")
         info.age = resultSet.getInt("age")
         userInfoList.append(info)
@@ -30,5 +31,9 @@ class ApplicationDatabase @Inject()(implicit db: Database) {
       connection.close()
     }
     userInfoList
+  }
+
+  def userInfos2(): mutable.ListBuffer[UserInfo] = {
+    dbUtil.select("select * from user_infos", classOf[UserInfo])
   }
 }

@@ -21,6 +21,10 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
+        name "maven-repo"
+        url "https://repo.maven.apache.org/maven2"
+    }
+    maven {
         name "lightbend-maven-release"
         url "https://repo.lightbend.com/lightbend/maven-releases"
     }
