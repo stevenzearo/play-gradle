@@ -1,12 +1,13 @@
 package domain
 
-import simulation.{Column, Entity, Table}
+import simulation.{Entity, Table}
+import util.{Column, Entity, TableClass}
 
 /**
  * @author steve
  */
 @Entity
-@Table(name = "user_infos")
+@TableClass(name = "user_infos")
 class UserInfo() {
   @Column(name = "id") var id: String = _
   @Column(name = "name") var name: String = _

@@ -1,4 +1,4 @@
-package simulation;
+package util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
  * @author steve
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Entity {
+@Target(ElementType.FIELD)
+public @interface PrimaryKey {
 }

@@ -1,6 +1,7 @@
 package simulation
 
 import domain.UserInfo
+import util.{Column, Entity, Repository, TableClass}
 
 import scala.annotation.{ClassfileAnnotation, StaticAnnotation}
 import scala.annotation.meta.field
@@ -10,7 +11,9 @@ import scala.beans.BeanProperty
  * @author steve
  */
 object AnnotationDemo {
-  @Entity @Table(name = "employees") class Employee {
+  @Entity
+  @TableClass(name = "employees")
+  class Employee {
     @Column(name = "id") var id: String = _
   }
 
