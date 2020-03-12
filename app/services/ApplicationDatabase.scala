@@ -13,27 +13,27 @@ import scala.collection.mutable
  * @author steve
  */
 class ApplicationDatabase @Inject()(protected val dbUtil: DBUtil, db: Database) {
-  def userInfos(): mutable.ListBuffer[UserInfo] = {
-    val userInfoList = new mutable.ListBuffer[UserInfo]
-    db.withConnection { connection =>
-      val statement: PreparedStatement = connection.prepareStatement("select * from user_infos")
-      statement.execute()
-      val resultSet = statement.getResultSet
-      while (resultSet.next()) {
-        val info = new UserInfo
-        info.id = resultSet.getString("id")
-        info.name = resultSet.getString("name")
-        info.age = resultSet.getInt("age")
-        userInfoList.append(info)
-      }
-      resultSet.close()
-      statement.close()
-      connection.close()
+    def userInfos(): mutable.ListBuffer[UserInfo] = {
+        val userInfoList = new mutable.ListBuffer[UserInfo]
+        db.withConnection { connection =>
+            val statement: PreparedStatement = connection.prepareStatement("select * from user_infos")
+            statement.execute()
+            val resultSet = statement.getResultSet
+            while (resultSet.next()) {
+                val info = new UserInfo
+                info.id = resultSet.getString("id")
+                info.name = resultSet.getString("name")
+                info.age = resultSet.getInt("age")
+                userInfoList.append(info)
+            }
+            resultSet.close()
+            statement.close()
+            connection.close()
+        }
+        userInfoList
     }
-    userInfoList
-  }
 
-  def userInfos2(): mutable.ListBuffer[UserInfo] = {
-    dbUtil.select("select * from user_infos", classOf[UserInfo])
-  }
+    def userInfos2(): mutable.ListBuffer[UserInfo] = {
+        dbUtil.select("select * from user_infos", classOf[UserInfo])
+    }
 }

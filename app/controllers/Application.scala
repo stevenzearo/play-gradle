@@ -8,7 +8,7 @@ import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponent
  */
 @Singleton
 class Application @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
-  def index: Action[AnyContent] = Action {
-    Ok("hello, world!")
-  }
+    def index: Action[AnyContent] = Action {
+        Ok("hello, world!")
+    }
 }

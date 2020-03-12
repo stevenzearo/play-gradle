@@ -11,20 +11,20 @@ import services.ApplicationDatabase
  */
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents, database: ApplicationDatabase)(implicit assetsFinder: AssetsFinder)
-  extends AbstractController(cc) {
+    extends AbstractController(cc) {
 
-  /**
-   * Create an Action to render an HTML page with a welcome message.
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
-  def index: Action[AnyContent] = Action {
-    Ok(views.html.index("Your new application is ready."))
-  }
+    /**
+     * Create an Action to render an HTML page with a welcome message.
+     * The configuration in the `routes` file means that this method
+     * will be called when the application receives a `GET` request with
+     * a path of `/`.
+     */
+    def index: Action[AnyContent] = Action {
+        Ok(views.html.index("Your new application is ready."))
+    }
 
-  def testHtml: Action[AnyContent] = Action {
-    val userInfoStr: String = database.userInfos2().map(userInfo => s"<p>$userInfo</p>").reduce(_ + _)
-    Ok(views.html.testHtml("steve")(Html((s"<div>$userInfoStr</div>"))))
-  }
+    def testHtml: Action[AnyContent] = Action {
+        val userInfoStr: String = database.userInfos2().map(userInfo => s"<p>$userInfo</p>").reduce(_ + _)
+        Ok(views.html.testHtml("steve")(Html((s"<div>$userInfoStr</div>"))))
+    }
 }

@@ -1,6 +1,7 @@
 package services
 
 import java.util.concurrent.atomic.AtomicInteger
+
 import javax.inject._
 
 /**
@@ -9,7 +10,7 @@ import javax.inject._
  * incremented number each time it is called.
  */
 trait Counter {
-  def nextCount(): Int
+    def nextCount(): Int
 }
 
 /**
@@ -23,7 +24,8 @@ trait Counter {
  * injected.
  */
 @Singleton
-class AtomicCounter extends Counter {  
-  private val atomicCounter = new AtomicInteger()
-  override def nextCount(): Int = atomicCounter.getAndIncrement()
+class AtomicCounter extends Counter {
+    private val atomicCounter = new AtomicInteger()
+
+    override def nextCount(): Int = atomicCounter.getAndIncrement()
 }
