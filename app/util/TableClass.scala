@@ -24,7 +24,7 @@ class TableClass[T](val entityClass: Class[T]) extends AbstractEntity[T] {
 }
 
 object TableClass {
-    def apply[T >: AnyRef](entityClass: Class[T]): TableClass[T] = {
+    def apply[T](entityClass: Class[T]): TableClass[T] = {
         val tableAnnotation = entityClass.getAnnotation(classOf[Table])
         if (tableAnnotation == null) throw new Exception("table class must have @Table annotation")
         val primaryKeyNum: Int = entityClass.getDeclaredFields.count(field => field.getAnnotation(classOf[PrimaryKey]) != null)

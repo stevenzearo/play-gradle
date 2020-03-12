@@ -7,7 +7,7 @@ import scala.collection.mutable
 /**
  * @author steve
  */
-trait AbstractEntity[T >: AnyRef] {
+trait AbstractEntity[T] {
     val entityClass: Class[T]
 
     def getFieldMap: Map[String, Field] = {

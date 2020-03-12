@@ -1,7 +1,7 @@
 package simulation
 
 import domain.UserInfo
-import util.{Column, Entity, Repository, Table}
+import util._
 
 /**
  * @author steve
@@ -25,5 +25,16 @@ object AnnotationDemo {
         annotations.foreach(println)
         println("-------")
         aClass.getDeclaredFields.foreach(field => field.getAnnotations.foreach(println))
+
+
+        println("********************")
+        val tableClass = new TableClass(classOf[Employee])
+        val tableName = tableClass.tableName
+        val fieldValMap = tableClass.fieldMap.map(entry => entry._1 -> entry._2.get(employee))
+        if (fieldValMap.isEmpty) throw new Exception("table columns can not be empty")
+        val columnsStr: String = fieldValMap.keys.reduce((k1, k2) => k1 + ", " + k2)
+        val paramsStr = fieldValMap.values.reduce((v1, v2) => v1 + ", " + v2)
+        var sql: String = s"insert into $tableName ($columnsStr) values ($paramsStr)"
+        println(sql)
     }
 }

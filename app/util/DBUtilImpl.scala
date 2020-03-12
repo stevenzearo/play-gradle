@@ -15,9 +15,8 @@ import scala.collection.mutable.ListBuffer
 // todo
 class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
 
-    override def get[T >: AnyRef](id: Object): Option[T] = {
-        val entityClass = classOf[T]
-        val tableClass = new TableClass[T](entityClass)
+    override def get[T >: AnyRef](aClass: Class[T], id: Object): Option[T] = {
+        val tableClass = new TableClass[T](aClass)
         val entities: ListBuffer[T] = executeQuery[T](tableClass, s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = $id")
         var result: T = null
         if (entities.size > 1) throw new Exception("duplicated primary key")
@@ -25,21 +24,26 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         Option(result)
     }
 
-    override def select[T >: AnyRef](sql: String, entitiesClass: Class[T], params: Object*): mutable.ListBuffer[T] = {
+    override def select[T](sql: String, entitiesClass: Class[T], params: Object*): mutable.ListBuffer[T] = {
         val entityClass = new EntityClass[T](entitiesClass)
         executeQuery(entityClass, sql, params)
     }
 
-    override def create[T >: AnyRef](t: T): Boolean = {
-        val tableClass = new TableClass[T](classOf[T])
-
-
-        null
+    override def create[T](aClass: Class[T], t: T): Boolean = {
+        val tableClass = new TableClass[T](aClass)
+        val tableName = tableClass.tableName
+        val fieldValMap = tableClass.fieldMap.map(entry => entry._1 -> entry._2.get(t))
+        if (fieldValMap.isEmpty) throw new Exception("table columns can not be empty")
+        val columnsStr: String = fieldValMap.keys.reduce((k1, k2) => k1 + ", " + k2)
+        val paramsStr = fieldValMap.values.reduce((v1, v2) => v1 + ", " + v2)
+        var sql: String = s"insert into $tableName ($columnsStr) values ($paramsStr)"
+                execute(tableClass, sql, fieldValMap.values)
+        false
     }
 
-    override def delete(id: Object): Boolean = ???
+    override def delete(id: Object): Boolean = false
 
-    private def execute[T >: AnyRef](tableClass: TableClass[T], sql: String, params: Object*): Boolean = {
+    private def execute[T](tableClass: TableClass[T], sql: String, params: Object*): Boolean = {
         database.withConnection(connection => {
             val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
 
@@ -47,7 +51,7 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         false
     }
 
-    private def executeQuery[T >: AnyRef](entityClass: AbstractEntity[T], sql: String, params: Object*): mutable.ListBuffer[T] = {
+    private def executeQuery[T](entityClass: AbstractEntity[T], sql: String, params: Object*): mutable.ListBuffer[T] = {
         database.withConnection(connection => {
             val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
             val paramPairs: List[(Int, Object)] = getParamPair(params)
@@ -67,7 +71,7 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
 
       }*/
 
-    private def getEntityFieldMap[T >: AnyRef](entityClass: Class[T]): mutable.HashMap[String, Class[_]] = {
+    private def getEntityFieldMap[T](entityClass: Class[T]): mutable.HashMap[String, Class[_]] = {
         val fieldMap: mutable.HashMap[String, Class[_]] = new mutable.HashMap[String, Class[_]]
         entityClass.getDeclaredFields.foreach(field => {
             field.setAccessible(true)
@@ -79,7 +83,7 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         fieldMap
     }
 
-    private def constructEntity[T >: AnyRef](entityClass: AbstractEntity[T], fieldMap: Map[String, Field], resultSet: ResultSet): T = {
+    private def constructEntity[T](entityClass: AbstractEntity[T], fieldMap: Map[String, Field], resultSet: ResultSet): T = {
         val fieldMapVal = fieldMap.map(entry => (entry._1, resultSet.getObject(entry._1)))
         val entity: T = entityClass.entityClass.getDeclaredConstructor().newInstance()
         entityClass.entityClass.getDeclaredFields.foreach(field => {
