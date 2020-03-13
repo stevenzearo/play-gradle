@@ -32,7 +32,6 @@ object TableClass {
 
     private def validateAnnotation[T](entityClass: Class[T]): Unit = {
         val tableAnnotation = entityClass.getAnnotation(classOf[Table])
-        println(">>>" + tableAnnotation)
         if (tableAnnotation == null) throw new Exception("table class must have @Table annotation")
         val primaryKeyNum: Int = entityClass.getDeclaredFields.count(field => field.getAnnotation(classOf[PrimaryKey]) != null)
         if (primaryKeyNum != 1) throw new Exception("table class must have and only have one primary key")
