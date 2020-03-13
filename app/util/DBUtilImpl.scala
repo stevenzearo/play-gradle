@@ -38,17 +38,19 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         val paramsStr = fieldValMap.values.map(v => s"\'$v\'").reduce((v1, v2) => s"$v1, $v2")
         val sql: String = s"insert into $tableName ($columnsStr) values ($paramsStr)"
         execute(tableClass, sql, fieldValMap.values)
-        false
     }
 
     override def delete(id: Object): Boolean = false
 
     private def execute[T](tableClass: TableClass[T], sql: String, params: Object*): Boolean = {
+        var result: Boolean = false
         database.withConnection(connection => {
             val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
-
+            val paramPairs = getParamPair(params)
+            paramPairs.foreach(paramPair => preparedStatement.setObject(paramPair._1, paramPair._2))
+            result = preparedStatement.execute()
         })
-        false
+        result
     }
 
     private def executeQuery[T](entityClass: AbstractEntity[T], sql: String, params: Object*): mutable.ListBuffer[T] = {
@@ -71,22 +73,10 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
 
       }*/
 
-    private def getEntityFieldMap[T](entityClass: Class[T]): mutable.HashMap[String, Class[_]] = {
-        val fieldMap: mutable.HashMap[String, Class[_]] = new mutable.HashMap[String, Class[_]]
-        entityClass.getDeclaredFields.foreach(field => {
-            field.setAccessible(true)
-            val columnAnnotation = field.getAnnotation(classOf[Column])
-            if (columnAnnotation != null) {
-                fieldMap.put(field.getAnnotation(classOf[Column]).name(), field.getDeclaringClass)
-            }
-        })
-        fieldMap
-    }
-
-    private def constructEntity[T](entityClass: AbstractEntity[T], fieldMap: Map[String, Field], resultSet: ResultSet): T = {
+    private def constructEntity[T](abstractEntity: AbstractEntity[T], fieldMap: Map[String, Field], resultSet: ResultSet): T = {
         val fieldMapVal = fieldMap.map(entry => (entry._1, resultSet.getObject(entry._1)))
-        val entity: T = entityClass.entityClass.getDeclaredConstructor().newInstance()
-        entityClass.entityClass.getDeclaredFields.foreach(field => {
+        val entity: T = abstractEntity.entityClass.getDeclaredConstructor().newInstance()
+        abstractEntity.entityClass.getDeclaredFields.foreach(field => {
             field.setAccessible(true)
             val columnAnnotation = field.getAnnotation(classOf[Column])
             if (columnAnnotation != null) {
