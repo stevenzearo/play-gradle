@@ -36,4 +36,8 @@ class ApplicationDatabase @Inject()(protected val dbUtil: DBUtil, db: Database) 
     def userInfos2(): mutable.ListBuffer[UserInfo] = {
         dbUtil.select("select * from user_infos", classOf[UserInfo])
     }
+
+    def getUserInfo(id: String): UserInfo = {
+        dbUtil.get(classOf[UserInfo], id).getOrElse(new UserInfo)
+    }
 }

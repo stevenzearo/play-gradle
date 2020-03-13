@@ -15,13 +15,14 @@ import scala.collection.mutable.ListBuffer
 // todo
 class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
 
-    override def get[T >: AnyRef](aClass: Class[T], id: Object): Option[T] = {
+    override def get[T >: Null](aClass: Class[T], id: Object): Option[T] = {
         val tableClass = TableClass[T](aClass)
-        val entities: ListBuffer[T] = executeQuery[T](tableClass, s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = $id")
-        var result: T = null
+        val sql = s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = \'$id\'"
+        val entities: ListBuffer[T] = executeQuery[T](tableClass, sql)
         if (entities.size > 1) throw new Exception("duplicated primary key")
-        if (entities.nonEmpty) result = entities.head
-        Option(result)
+        var result: Option[T] = Option[T](null)
+        if (entities.nonEmpty) result = Option(entities.head)
+        result
     }
 
     override def select[T](sql: String, entitiesClass: Class[T], params: Object*): mutable.ListBuffer[T] = {
@@ -68,10 +69,16 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         })
     }
 
-    /*
-      private def executeUpdate(): Unit = {
-
-      }*/
+    private def executeUpdate[T](entityClass: AbstractEntity[T], sql: String, params: Object*): Int = {
+        var inflectedRowNum = 0
+        database.withConnection(connection => {
+            val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
+            val paramPairs: List[(Int, Object)] = getParamPair(params)
+            paramPairs.foreach(paramPair => preparedStatement.setObject(paramPair._1, paramPair._2))
+            inflectedRowNum = preparedStatement.executeUpdate()
+        })
+        inflectedRowNum
+    }
 
     private def constructEntity[T](abstractEntity: AbstractEntity[T], fieldMap: Map[String, Field], resultSet: ResultSet): T = {
         val fieldMapVal = fieldMap.map(entry => (entry._1, resultSet.getObject(entry._1)))

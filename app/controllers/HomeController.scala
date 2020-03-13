@@ -25,6 +25,7 @@ class HomeController @Inject()(cc: ControllerComponents, database: ApplicationDa
 
     def testHtml: Action[AnyContent] = Action {
         val userInfoStr: String = database.userInfos2().map(userInfo => s"<p>$userInfo</p>").reduce(_ + _)
-        Ok(views.html.testHtml("steve")(Html((s"<div>$userInfoStr</div>"))))
+        val userInfoStr2 = database.getUserInfo("id-0001").toString
+        Ok(views.html.testHtml("steve")(Html(s"<div>$userInfoStr<p>$userInfoStr2</p></div>")))
     }
 }
