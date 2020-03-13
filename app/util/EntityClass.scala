@@ -3,14 +3,12 @@ package util
 /**
  * @author steve
  */
-class EntityClass[T](val entityClass: Class[T]) extends AbstractEntity[T] {
+class EntityClass[T] private(val entityClass: Class[T]) extends AbstractEntity[T] {
 }
 
 object EntityClass {
     def apply[T](entityClass: Class[T]): EntityClass[T] = {
-//        validateEntityAnnotation()
-//        entityClass
-        entityClass
-        apply(entityClass)
+        AbstractEntity.validateEntityAnnotation(entityClass)
+        new EntityClass[T](entityClass)
     }
 }

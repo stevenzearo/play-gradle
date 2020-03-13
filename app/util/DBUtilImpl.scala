@@ -16,7 +16,7 @@ import scala.collection.mutable.ListBuffer
 class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
 
     override def get[T >: AnyRef](aClass: Class[T], id: Object): Option[T] = {
-        val tableClass = new TableClass[T](aClass)
+        val tableClass = TableClass[T](aClass)
         val entities: ListBuffer[T] = executeQuery[T](tableClass, s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = $id")
         var result: T = null
         if (entities.size > 1) throw new Exception("duplicated primary key")
@@ -25,19 +25,19 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
     }
 
     override def select[T](sql: String, entitiesClass: Class[T], params: Object*): mutable.ListBuffer[T] = {
-        val entityClass = new EntityClass[T](entitiesClass)
+        val entityClass = EntityClass[T](entitiesClass)
         executeQuery(entityClass, sql, params)
     }
 
     override def create[T](aClass: Class[T], t: T): Boolean = {
-        val tableClass = new TableClass[T](aClass)
+        val tableClass = TableClass[T](aClass)
         val tableName = tableClass.tableName
         val fieldValMap = tableClass.fieldMap.map(entry => entry._1 -> entry._2.get(t))
         if (fieldValMap.isEmpty) throw new Exception("table columns can not be empty")
         val columnsStr: String = fieldValMap.keys.reduce((k1, k2) => k1 + ", " + k2)
-        val paramsStr = fieldValMap.values.reduce((v1, v2) => v1 + ", " + v2)
-        var sql: String = s"insert into $tableName ($columnsStr) values ($paramsStr)"
-                execute(tableClass, sql, fieldValMap.values)
+        val paramsStr = fieldValMap.values.map(v => s"\'$v\'").reduce((v1, v2) => s"$v1, $v2")
+        val sql: String = s"insert into $tableName ($columnsStr) values ($paramsStr)"
+        execute(tableClass, sql, fieldValMap.values)
         false
     }
 

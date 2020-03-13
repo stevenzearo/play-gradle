@@ -1,6 +1,6 @@
 package domain
 
-import util.{Column, Entity, Table}
+import util.{Column, Entity, PrimaryKey, Table}
 
 /**
  * @author steve
@@ -8,6 +8,7 @@ import util.{Column, Entity, Table}
 @Entity
 @Table(name = "user_infos")
 class UserInfo() {
+    @PrimaryKey
     @Column(name = "id") var id: String = _
     @Column(name = "name") var name: String = _
     @Column(name = "age") var age: Int = _
