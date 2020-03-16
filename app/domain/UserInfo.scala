@@ -1,6 +1,8 @@
 package domain
 
-import util.{Column, Entity, PrimaryKey, Table}
+import lib.db.{Column, Entity, PrimaryKey, Table}
+
+import util.{Entity, PrimaryKey, Table}
 
 /**
  * @author steve

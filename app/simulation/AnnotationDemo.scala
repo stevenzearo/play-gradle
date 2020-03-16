@@ -1,6 +1,8 @@
 package simulation
 
 import domain.UserInfo
+import lib.db.{Column, Entity, PrimaryKey, Table}
+
 import util._
 
 /**

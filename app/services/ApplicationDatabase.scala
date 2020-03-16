@@ -2,17 +2,17 @@ package services
 
 import java.sql.PreparedStatement
 
-import domain.UserInfo
+import domain.{UserInfo, UserInfoDAO}
 import javax.inject.Inject
+import lib.db.DAO
 import play.api.db.Database
-import util.DBUtil
 
 import scala.collection.mutable
 
 /**
  * @author steve
  */
-class ApplicationDatabase @Inject()(protected val dbUtil: DBUtil, db: Database) {
+class ApplicationDatabase @Inject()(protected val dao: UserInfoDAO, db: Database) {
     def userInfos(): mutable.ListBuffer[UserInfo] = {
         val userInfoList = new mutable.ListBuffer[UserInfo]
         db.withConnection { connection =>
@@ -34,10 +34,10 @@ class ApplicationDatabase @Inject()(protected val dbUtil: DBUtil, db: Database) 
     }
 
     def userInfos2(): mutable.ListBuffer[UserInfo] = {
-        dbUtil.select("select * from user_infos", classOf[UserInfo])
+        dao.select("select * from user_infos", classOf[UserInfo])
     }
 
     def getUserInfo(id: String): UserInfo = {
-        dbUtil.get(classOf[UserInfo], id).getOrElse(new UserInfo)
+        dao.get(classOf[UserInfo], id).getOrElse(new UserInfo)
     }
 }

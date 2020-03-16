@@ -1,4 +1,4 @@
-package util
+package lib.db
 
 import scala.collection.mutable.ListBuffer
 

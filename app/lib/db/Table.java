@@ -1,4 +1,4 @@
-package util;
+package lib.db;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @author steve
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Column {
+@Target(ElementType.TYPE)
+public @interface Table {
     String name();
 }
