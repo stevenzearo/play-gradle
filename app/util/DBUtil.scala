@@ -1,7 +1,5 @@
 package util
 
-import domain.UserInfo
-
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -14,5 +12,5 @@ trait DBUtil {
 
     def create[T](aClass: Class[T], t: T): Boolean
 
-    def delete(id: Object): Boolean
+    def delete[T](aClass: Class[T], id: Object): Boolean
 }

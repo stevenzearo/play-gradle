@@ -13,7 +13,6 @@ import scala.collection.mutable.ListBuffer
 /**
  * @author steve
  */
-// todo
 class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
     private val logger: Logger = Logger.apply(this.getClass)
 
@@ -43,9 +42,16 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         execute(tableClass, sql, fieldValMap.values)
     }
 
-    override def delete(id: Object): Boolean = false
+    override def delete[T](aClass: Class[T], id: Object): Boolean = {
+        val tableClass = TableClass[T](aClass)
+        val tableName = tableClass.tableName
+        val primaryKey: String = tableClass.primaryKeyColumn
+        val sql: String = s"delete from $tableName where $primaryKey = '$id'"
+        execute(tableClass, sql)
+    }
 
     private def execute[T](tableClass: TableClass[T], sql: String, params: Object*): Boolean = {
+        logger.info(sql)
         var result: Boolean = false
         database.withConnection(connection => {
             val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
@@ -73,6 +79,7 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
     }
 
     private def executeUpdate[T](entityClass: AbstractEntity[T], sql: String, params: Object*): Int = {
+        logger.info(sql)
         var inflectedRowNum = 0
         database.withConnection(connection => {
             val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
