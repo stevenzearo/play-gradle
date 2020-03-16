@@ -4,6 +4,7 @@ import java.lang.reflect.Field
 import java.sql.{PreparedStatement, ResultSet}
 
 import javax.inject.Inject
+import play.api.Logger
 import play.api.db.Database
 
 import scala.collection.mutable
@@ -14,6 +15,7 @@ import scala.collection.mutable.ListBuffer
  */
 // todo
 class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
+    private val logger: Logger = Logger.apply(this.getClass)
 
     override def get[T >: Null](aClass: Class[T], id: Object): Option[T] = {
         val tableClass = TableClass[T](aClass)
@@ -55,6 +57,7 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
     }
 
     private def executeQuery[T](entityClass: AbstractEntity[T], sql: String, params: Object*): mutable.ListBuffer[T] = {
+        logger.info(sql)
         database.withConnection(connection => {
             val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
             val paramPairs: List[(Int, Object)] = getParamPair(params)
