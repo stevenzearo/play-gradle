@@ -9,4 +9,3 @@ this is a test project for using playframework build with gradle (by using plugi
 ### Others
 #### /app/lib
 this is a directory of some tool library build by myself
-### /app/simulation
