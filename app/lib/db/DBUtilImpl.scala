@@ -16,7 +16,7 @@ import scala.collection.mutable.ListBuffer
 class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
     private val logger: Logger = Logger.apply(this.getClass)
 
-    override def get[T >: Null](aClass: Class[T], id: Object): Option[T] = {
+    override def get[T >: Null, A](aClass: Class[T], id: A): Option[T] = {
         val tableClass = TableClass[T](aClass)
         val sql = s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = \'$id\'"
         val entities: ListBuffer[T] = executeQuery[T](tableClass, sql)
@@ -42,7 +42,7 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         execute(tableClass, sql, fieldValMap.values)
     }
 
-    override def delete[T](aClass: Class[T], id: Object): Boolean = {
+    override def delete[T, A](aClass: Class[T], id: A): Boolean = {
         val tableClass = TableClass[T](aClass)
         val tableName = tableClass.tableName
         val primaryKey: String = tableClass.primaryKeyColumn

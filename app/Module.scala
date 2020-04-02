@@ -5,8 +5,6 @@ import domain.{UserInfo, UserInfoDAO}
 import lib.db.{DAO, DBUtil, DBUtilImpl}
 import services.{ApplicationTimer, AtomicCounter, Counter}
 
-import util.{DBUtil, DBUtilImpl}
-
 /**
  * This class is a Guice module that tells Guice how to bind several
  * different types. This Guice module is created when the Play
@@ -18,15 +16,15 @@ import util.{DBUtil, DBUtilImpl}
  * configuration file.
  */
 class Module extends AbstractModule {
-    override def configure = {
-        // Use the system clock as the default implementation of Clock
-        bind(classOf[DBUtil]).to(classOf[DBUtilImpl]).asEagerSingleton()
-        bind(classOf[DAO[UserInfo]]).to(classOf[UserInfoDAO]).asEagerSingleton()
-        bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
-        // Ask Guice to create an instance of ApplicationTimer when the
-        // application starts.
-        bind(classOf[ApplicationTimer]).asEagerSingleton()
-        // Set AtomicCounter as the implementation for Counter.
-        bind(classOf[Counter]).to(classOf[AtomicCounter])
-    }
+  override def configure = {
+    // Use the system clock as the default implementation of Clock
+    bind(classOf[DBUtil]).to(classOf[DBUtilImpl]).asEagerSingleton()
+    bind(classOf[DAO[UserInfo]]).to(classOf[UserInfoDAO]).asEagerSingleton()
+    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
+    // Ask Guice to create an instance of ApplicationTimer when the
+    // application starts.
+    bind(classOf[ApplicationTimer]).asEagerSingleton()
+    // Set AtomicCounter as the implementation for Counter.
+    bind(classOf[Counter]).to(classOf[AtomicCounter])
+  }
 }

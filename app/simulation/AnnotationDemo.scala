@@ -1,9 +1,7 @@
 package simulation
 
 import domain.UserInfo
-import lib.db.{Column, Entity, PrimaryKey, Table}
-
-import util._
+import lib.db._
 
 /**
  * @author steve
@@ -31,7 +29,7 @@ object AnnotationDemo {
 
 
         val userInfo: UserInfo = new UserInfo
-        userInfo.id = "id-0001"
+        userInfo.id = 1
         userInfo.name = "user-0001"
         userInfo.age = 19
 

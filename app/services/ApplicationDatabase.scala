@@ -21,7 +21,7 @@ class ApplicationDatabase @Inject()(protected val dao: UserInfoDAO, db: Database
             val resultSet = statement.getResultSet
             while (resultSet.next()) {
                 val info = new UserInfo
-                info.id = resultSet.getString("id")
+                info.id = resultSet.getInt("id")
                 info.name = resultSet.getString("name")
                 info.age = resultSet.getInt("age")
                 userInfoList.append(info)
@@ -37,7 +37,7 @@ class ApplicationDatabase @Inject()(protected val dao: UserInfoDAO, db: Database
         dao.select("select * from user_infos", classOf[UserInfo])
     }
 
-    def getUserInfo(id: String): UserInfo = {
-        dao.get(classOf[UserInfo], id).getOrElse(new UserInfo)
+    def getUserInfo(id: Int): UserInfo = {
+        dao.get(id).getOrElse(new UserInfo)
     }
 }
