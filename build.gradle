@@ -7,12 +7,12 @@ plugins {
 group 'steve.playframework'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 12
+sourceCompatibility = 11
 play {
     platform {
         playVersion = '2.6.7'
         scalaVersion = '2.12'
-        javaVersion = JavaVersion.VERSION_12
+        javaVersion = JavaVersion.VERSION_11
     }
 
     injectedRoutesGenerator = true
