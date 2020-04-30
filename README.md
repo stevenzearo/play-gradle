@@ -4,7 +4,7 @@ this is a test project for using playframework build with gradle (by using plugi
 ### project version relevant
 1. playframework version 2.6.7
 2. scala version 2.12
-3. java version 12
+3. java version 11
 4. plugin org.gradle.playframework:playframework:0.9 [get repo info](https://gradle.github.io/playframework/)
 ### Others
 #### /app/lib
