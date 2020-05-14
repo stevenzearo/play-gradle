@@ -1,0 +1,7 @@
+@import domain.UserInfo
+@(userInfo: UserInfo)(message: String)
+<html lang="en">
+    <body>
+        @userInfo.id <span>|</span> @userInfo.name <span>|</span> @userInfo.age
+    </body>
+</html>

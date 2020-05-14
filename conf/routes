@@ -14,3 +14,4 @@ GET        /message             controllers.AsyncController.message
 GET        /assets/*file        controllers.Assets.versioned(file)
 
 GET        /test                controllers.Application.index
+GET         /user/*          controllers.UserInfoController.get
