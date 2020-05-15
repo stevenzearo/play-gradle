@@ -13,7 +13,7 @@ class UserInfoDAO @Inject()(val dbUtil: DBUtil) extends DAO[UserInfo] {
 
   override def get[T](id: T): Option[UserInfo] = dbUtil.get(aClass, id)
 
-  override def select(sql: String, params: Object*): ListBuffer[UserInfo] = dbUtil.select(sql, aClass, params)
+  override def select(sql: String, params: Object*): ListBuffer[UserInfo] = dbUtil.select(sql, aClass, params.toArray)
 
   override def create(t: UserInfo): Boolean = dbUtil.create(aClass, t)
 

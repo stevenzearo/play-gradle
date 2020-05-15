@@ -25,9 +25,9 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         result
     }
 
-    override def select[T](sql: String, entitiesClass: Class[T], params: Object*): mutable.ListBuffer[T] = {
+    override def select[T](sql: String, entitiesClass: Class[T], params: Array[Object]): mutable.ListBuffer[T] = {
         val entityClass = EntityClass[T](entitiesClass)
-        executeQuery(entityClass, sql, params.toArray)
+        executeQuery(entityClass, sql, params)
     }
 
     override def create[T](aClass: Class[T], t: T): Boolean = {
