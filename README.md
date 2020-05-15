@@ -10,5 +10,5 @@ this is a test project for using playframework build with gradle (by using plugi
 #### /app/lib
 this is a directory of some tool library build by myself
 
-### Ajax Request
+### AJAX Request
 example from AJAX Request please to see UserWebService (in app/controllers/UserWebService)
