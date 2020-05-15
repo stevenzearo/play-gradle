@@ -34,7 +34,7 @@ class ApplicationDatabase @Inject()(protected val dao: UserInfoDAO, db: Database
     }
 
     def userInfos2(): mutable.ListBuffer[UserInfo] = {
-        dao.select("select * from user_infos", classOf[UserInfo])
+        dao.select("select * from user_infos")
     }
 
     def getUserInfo(id: Int): UserInfo = {
