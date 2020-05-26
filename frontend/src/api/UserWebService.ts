@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import {CreateUserRequest} from "./user/CreateUserRequest";
 import {GetUserResponse} from "./user/GetUserResponse";
+import {SearchByNameResponse, UserInfo} from "./user/SearchByNameResponse";
 
 export class UserWebService {
     get(id: number): GetUserResponse | null {
@@ -8,11 +9,11 @@ export class UserWebService {
         $.ajax({
             async: false,
             type: 'GET',
-            url: 'http://localhost:8410/user/' + id,
-            success: (data,status,xhr) => {
+            url: 'http://localhost:9000/user/' + id,
+            success: (data, status, xhr) => {
                 console.log("get user success!!!!!");
                 console.log(data);
-                result = new GetUserResponse(data.id, data.name, data.age, data.email);
+                result = new GetUserResponse(data.id, data.name, data.age);
                 return result;
             },
             dataType: 'json'
@@ -30,4 +31,23 @@ export class UserWebService {
         })
     }
 
+    searchByName(name: string) : SearchByNameResponse | null {
+        var result: SearchByNameResponse | null = null;
+        $.ajax({
+            type: 'PUT',
+            url: 'http://localhost/9000/user',
+            data: {name: name},
+            dataType: 'application/json',
+            success: (data, status, xhr) => {
+                console.log("get user success!!!!!");
+                console.log(data);
+                let userInfos = [];
+                for (let i = 0; i < data.length; i++) {
+                    userInfos[i] = new UserInfo(data[i].id, data[i].age, data[i].name);
+                }
+                return new SearchByNameResponse(userInfos);
+            }
+        });
+        return result;
+    }
 }

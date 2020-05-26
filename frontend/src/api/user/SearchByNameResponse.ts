@@ -1,4 +1,12 @@
-export class GetUserResponse {
+export class SearchByNameResponse {
+    public userInfos: UserInfo[];
+
+    constructor(userInfos: UserInfo[]) {
+        this.userInfos = userInfos;
+    }
+}
+
+export class UserInfo {
     public id: number;
     public name: string;
     public age: number;

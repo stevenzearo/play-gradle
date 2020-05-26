@@ -14,7 +14,7 @@ class UserInfoService @Inject() (protected val userInfoDAO: UserInfoDAO) {
 
     def get(id: Long): UserInfo = {
         val userInfoOptional = userInfoDAO.get(id)
-        if (userInfoOptional.isDefined) userInfoOptional.get else null
+        if (userInfoOptional.nonEmpty) userInfoOptional.get else null
     }
 
     def search(request: SearchRequest): SearchResponse = {

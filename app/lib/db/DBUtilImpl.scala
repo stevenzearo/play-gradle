@@ -20,9 +20,7 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         val sql = s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = \'$id\'"
         val entities: ListBuffer[T] = executeQuery[T](tableClass, sql, null)
         if (entities.size > 1) throw new Exception("duplicated primary key")
-        var result: Option[T] = Option[T](null)
-        if (entities.nonEmpty) result = Option(entities.head)
-        result
+        if (entities.nonEmpty) Option[T](entities.head) else Option(null)
     }
 
     override def select[T](sql: String, entitiesClass: Class[T], params: Array[Object]): mutable.ListBuffer[T] = {
@@ -77,13 +75,11 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
 
     private def executeUpdate[T](entityClass: AbstractEntity[T], sql: String, params: Array[Object]): Int = {
         logger.info(sql)
-        var inflectedRowNum = 0
         database.withConnection(connection => {
             val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
             setParam(preparedStatement, params)
-            inflectedRowNum = preparedStatement.executeUpdate()
+            preparedStatement.executeUpdate()
         })
-        inflectedRowNum
     }
 
     private def setParam(preparedStatement: PreparedStatement, params: Array[Object]): Unit = {
