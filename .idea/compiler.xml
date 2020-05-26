@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="USE_RELEASE_OPTION" value="false" />
+    <bytecodeTargetLevel>
+      <module name="play-gradle.backend.main" target="11" />
+      <module name="play-gradle.backend.test" target="11" />
+      <module name="play-gradle.backend.user-service-db-migration.main" target="11" />
+      <module name="play-gradle.backend.user-service-db-migration.test" target="11" />
+      <module name="play-gradle.backend.user-service-interface.main" target="11" />
+      <module name="play-gradle.backend.user-service-interface.test" target="11" />
+      <module name="play-gradle.backend.user-service.main" target="11" />
+      <module name="play-gradle.backend.user-service.test" target="11" />
+      <module name="play-gradle.frontend.main" target="11" />
+      <module name="play-gradle.frontend.test" target="11" />
+      <module name="play-gradle.frontend.user-site.main" target="11" />
+      <module name="play-gradle.frontend.user-site.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
