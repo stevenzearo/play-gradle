@@ -5,8 +5,7 @@ import {UserWebService} from "./api/UserWebService";
 import {GetUserResponse} from "./api/user/GetUserResponse";
 
 function App() {
-    var userWebService: UserWebService = new UserWebService();
-    var data: GetUserResponse | null = userWebService.get(1);
+    var data: GetUserResponse | null = UserWebService.get(1);
     return (
         <div className="App">
             <header className="App-header">

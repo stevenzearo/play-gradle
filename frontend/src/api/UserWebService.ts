@@ -4,7 +4,7 @@ import {GetUserResponse} from "./user/GetUserResponse";
 import {SearchByNameResponse, UserInfo} from "./user/SearchByNameResponse";
 
 export class UserWebService {
-    get(id: number): GetUserResponse | null {
+    static get(id: number): GetUserResponse | null {
         var result: GetUserResponse | null = null;
         $.ajax({
             async: false,
@@ -22,7 +22,7 @@ export class UserWebService {
         return result;
     }
 
-    create(user: CreateUserRequest) {
+    static create(user: CreateUserRequest) {
         $.ajax({
             type: 'POST',
             url: 'http://localhost/',
@@ -31,7 +31,7 @@ export class UserWebService {
         })
     }
 
-    searchByName(name: string) : SearchByNameResponse | null {
+    static searchByName(name: string) : SearchByNameResponse | null {
         var result: SearchByNameResponse | null = null;
         $.ajax({
             type: 'PUT',
