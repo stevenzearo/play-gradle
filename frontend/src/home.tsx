@@ -1,30 +1,23 @@
 import React from 'react';
-import {IBlogProps, IBlogState} from "./common/IBlogProps";
-import {UserInfo} from "./api/user/SearchByNameResponse";
+import ShipWar from './module/game/shipWar';
 
-class Home extends React.Component<IBlogProps, IBlogState> {
-    private user: UserInfo | null;
+export interface HomeProp {
 
+}
 
-    constructor(props: Readonly<IBlogProps>) {
-        super(props);
-        this.user = props.user;
-    }
+export interface HomeState {
 
-    state: IBlogState = {
-        user: this.user
-    };
+}
+
+export class Home extends React.Component<HomeProp, HomeState> {
+
+    state: HomeProp = {};
 
     render() {
         return (
-            <div>
+            <div className={"content"}>
                 <h1>Hello, world!</h1>
-                <ul>
-                    user info:
-                    <li>id: {this.user?.id}</li>
-                    <li>name: {this.user?.name}</li>
-                    <li>age: {this.user?.age}</li>
-                </ul>
+                <ShipWar/>
             </div>
         );
     }

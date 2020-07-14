@@ -1,0 +1,11 @@
+.ship-war {
+    position: relative;
+    z-index: 1;
+    opacity: 0.5;
+    margin-left: 40%;
+    margin-top: -5%;
+    background-color: black;
+    width: 400px;
+    height: 300px;
+    border: red 1px solid;
+}
