@@ -18,5 +18,4 @@ class UserInfoDAO @Inject()(val dbUtil: DBUtil) extends DAO[UserInfo] {
   override def create(t: UserInfo): Boolean = dbUtil.create(aClass, t)
 
   override def delete[T](id: T): Boolean = dbUtil.delete(aClass, id)
-
 }
