@@ -19,8 +19,8 @@ object AnnotationDemo {
         val employee = new Employee
         employee.id = "id-0001"
         val aClass = classOf[UserInfo]
-        val repository = aClass.getAnnotation(classOf[Repository])
-        println(repository)
+        /*val repository = aClass.getAnnotation(classOf[Repository])
+        println(repository)*/
         val annotations = aClass.getAnnotations
         println("-------")
         annotations.foreach(println)
