@@ -17,7 +17,7 @@ object ReflectionDemo {
 
     def main(args: Array[String]): Unit = {
         val aClass = classOf[Student]
-        Logger.warn("hello >>>>>>>>>>>>>>>>> hello")
+        Logger.logger.warn("hello >>>>>>>>>>>>>>>>> hello")
         aClass.getFields.foreach(println)
     }
 }

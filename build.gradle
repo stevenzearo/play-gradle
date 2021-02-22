@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.gradle.playframework' version '0.11'
+    id 'org.gradle.playframework' version '0.10'
     id 'idea'
 }
 
@@ -20,6 +20,8 @@ play {
 
     injectedRoutesGenerator = true
 }
+
+
 repositories {
     mavenCentral()
     jcenter()
@@ -38,11 +40,25 @@ repositories {
     }
 }
 
+test {
+
+    useJUnitPlatform()
+    scala {
+        sourceSets["test"]
+    }
+    java {
+        sourceSets["test"]
+    }
+}
+
 dependencies {
-    testCompile "junit:junit:4.12"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+    testCompile "org.scalatestplus.play:scalatestplus-play_2.13:4.0.3"
     compile "com.typesafe.play:play-guice_2.13:${PLAY_VERSION}"
+    compile "com.typesafe.play:play-logback_2.13:${PLAY_VERSION}"
     compile "mysql:mysql-connector-java:8.0.15"
-    compile "org.slf4j:slf4j-simple:1.7.25"
     compile "com.typesafe.play:play-jdbc_2.13:${PLAY_VERSION}"
     compile "org.mongodb.scala:mongo-scala-driver_2.13:4.1.1"
 }
