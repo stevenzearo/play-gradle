@@ -41,13 +41,14 @@ repositories {
 }
 
 test {
-
     useJUnitPlatform()
     scala {
         sourceSets["test"]
+        sourceSets["main"]
     }
     java {
         sourceSets["test"]
+        sourceSets["main"]
     }
 }
 
@@ -56,6 +57,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
     testCompile "org.scalatestplus.play:scalatestplus-play_2.13:4.0.3"
+    testCompile "com.typesafe.akka:akka-stream-testkit_2.13:2.5.31"
     compile "com.typesafe.play:play-guice_2.13:${PLAY_VERSION}"
     compile "com.typesafe.play:play-logback_2.13:${PLAY_VERSION}"
     compile "mysql:mysql-connector-java:8.0.15"

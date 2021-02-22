@@ -5,6 +5,7 @@ import java.sql.{PreparedStatement, ResultSet}
 import java.util.concurrent.SubmissionPublisher
 
 import akka.NotUsed
+import akka.actor.{ActorSystem, Props}
 import akka.stream.scaladsl.{JavaFlowSupport, Source}
 import javax.inject.Inject
 import lib.db.{AbstractEntity, Column, EntityClass, TableClass}
@@ -17,7 +18,7 @@ import scala.collection.mutable.ListBuffer
  * @author steve
  */
 
-class AsyncDBUtilImpl @Inject()(implicit database: Database, ec: DataBaseExecutionContext) extends AsyncDBUtil {
+class AsyncDBUtilImpl @Inject()(implicit database: Database, system: ActorSystem, ec: DataBaseExecutionContext) extends AsyncDBUtil {
     private val logger = org.slf4j.LoggerFactory.getLogger(classOf[AsyncDBUtilImpl])
 
     override def get[T >: Null, A](aClass: Class[T], id: A): Source[T, NotUsed] = {
@@ -64,6 +65,7 @@ class AsyncDBUtilImpl @Inject()(implicit database: Database, ec: DataBaseExecuti
     private def executeQuery[T](entityClass: AbstractEntity[T], sql: String, params: Array[Object]) = {
         logger.info(sql + ", " + params)
         ec -> {
+            val senderRef = system.actorOf(Props[EntitySenderActor[T]]) // todo
             val publisher = new SubmissionPublisher[T]()
             database.withConnection(connection => {
                 val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
@@ -71,6 +73,8 @@ class AsyncDBUtilImpl @Inject()(implicit database: Database, ec: DataBaseExecuti
                 val resultSet = preparedStatement.executeQuery()
                 val fieldMap: Map[String, Field] = entityClass.getFieldMap
                 while (resultSet.next()) {
+                    senderRef ! constructEntity(entityClass, fieldMap, resultSet)
+
                     publisher.submit(constructEntity(entityClass, fieldMap, resultSet)
                     )
                 }

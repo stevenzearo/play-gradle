@@ -1,7 +1,10 @@
+package models
+
 import java.time.Clock
 
 import com.google.inject.AbstractModule
 import domain.{UserInfo, UserInfoDAO}
+import lib.db.async.{AsyncDBUtil, AsyncDBUtilImpl}
 import lib.db.{DAO, DBUtil, DBUtilImpl}
 import services.{ApplicationTimer, AtomicCounter, Counter, UserInfoService}
 
@@ -15,8 +18,8 @@ import services.{ApplicationTimer, AtomicCounter, Counter, UserInfoService}
  * adding `play.modules.enabled` settings to the `application.conf`
  * configuration file.
  */
-class Module extends AbstractModule {
-  override def configure = {
+class AppModule extends AbstractModule {
+  override def configure(): Unit = {
     // Use the system clock as the default implementation of Clock
     bind(classOf[DBUtil]).to(classOf[DBUtilImpl]).asEagerSingleton()
     bind(classOf[DAO[UserInfo]]).to(classOf[UserInfoDAO]).asEagerSingleton()
@@ -27,5 +30,6 @@ class Module extends AbstractModule {
     // Set AtomicCounter as the implementation for Counter.
     bind(classOf[Counter]).to(classOf[AtomicCounter])
     bind(classOf[UserInfoService]).asEagerSingleton()
+    bind(classOf[AsyncDBUtil]).to(classOf[AsyncDBUtilImpl]).asEagerSingleton()
   }
 }

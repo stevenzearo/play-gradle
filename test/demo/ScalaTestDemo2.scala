@@ -16,21 +16,14 @@ class ScalaTestDemo2 extends UnitSpec {
     }
 
     "A must test" must {
-        println("hello, world!")
+        Logger.logger.info("hello, world!")
         val stack = new mutable.Stack[Int]
         stack.push(1)
         stack.push(2)
         stack.pop() mustBe 2
         stack.pop() mustBe 1
-        println(">>>>>>>>>>>>>")
+        Logger.logger.info(">>>>>>>>>>>>>")
         Logger.logger.warn("test>>>>>>>>>>>")
-    }
-
-    "A should Test" should {
-        println("should do something")
-        "A Test" can {
-            println("can do something")
-        }
     }
 
     "Pop values in last-in-first-out order" must {
@@ -40,7 +33,16 @@ class ScalaTestDemo2 extends UnitSpec {
         stack.pop() mustBe 2
         stack.pop() mustBe 1
         Logger.logger.warn(">>>>>>>>>>>stack pop")
+
+        "A Test" can {
+            Logger.logger.info("can do something")
+        }
+
+        "A should Test" should {
+            Logger.logger.info("should do something")
+        }
     }
+
 
     "throw NoSuchElementException if an empty stack is popped" must {
         val emptyStack = new mutable.Stack[Int]
