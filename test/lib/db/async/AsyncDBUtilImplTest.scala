@@ -1,14 +1,14 @@
 package lib.db.async
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.{Flow, Keep, Sink}
+import akka.stream.OverflowStrategy
+import akka.stream.scaladsl.{Sink, Source}
 import demo.UnitSpec
 import domain.UserInfo
 import lib.db.DBUtil
 import org.junit.jupiter.api.Test
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, ExecutionContextExecutor}
+import scala.concurrent.ExecutionContextExecutor
 
 /**
  * @author steve
@@ -21,13 +21,9 @@ class AsyncDBUtilImplTest extends UnitSpec {
 
     @Test
     override def registerTest(): Unit = {
-        /*val source = asyncDBUtil.select("select * from user_infos", classOf[UserInfo], null)
-        val graph = source.via(Flow[UserInfo].map(_ => 1)).toMat(Sink.fold(0)(_ + _))(Keep.right)
-        val eventualInt = graph.run()
-        val value1 = Await.result(eventualInt, 5.second)
-        //        val eventualDone = source.runForeach(println)
-        //        eventualDone.onComplete(_ => system.terminate())
-        println(value1)*/
+        val source = Source.actorRef[UserInfo](100, OverflowStrategy.dropTail)
+        val actorRef = source.to(Sink.foreach(println)).run()
+        asyncDBUtil.select("select * from user_infos", classOf[UserInfo], null)(actorRef)
     }
 
     "Search UserInfo" must {
@@ -36,13 +32,4 @@ class AsyncDBUtilImplTest extends UnitSpec {
             userInfos.size must not be 0
         }
     }
-/*
-    "Async DBUtil" must {
-        val source = asyncDBUtil.select("select * from user_infos", classOf[UserInfo], null)
-        "source" in {
-            val eventualDone = source.runForeach(println)
-            eventualDone.onComplete(_ => system.terminate())
-            Thread.sleep(3000L)
-        }
-    }*/
 }
