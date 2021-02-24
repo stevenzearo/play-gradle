@@ -9,6 +9,7 @@ import lib.db.DBUtil
 import org.junit.jupiter.api.Test
 
 import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.duration._
 
 /**
  * @author steve
@@ -21,8 +22,8 @@ class AsyncDBUtilImplTest extends UnitSpec {
 
     @Test
     override def registerTest(): Unit = {
-        val source = Source.actorRef[UserInfo](100, OverflowStrategy.dropTail)
-        val actorRef = source.to(Sink.foreach(println)).run()
+        val source = Source.actorRef[UserInfo](1, OverflowStrategy.fail)
+        val actorRef = source.throttle(1, 100.millis).to(Sink.foreach(println)).run()
         asyncDBUtil.select("select * from user_infos", classOf[UserInfo], null)(actorRef)
     }
 

@@ -42,14 +42,14 @@ repositories {
 
 test {
     useJUnitPlatform()
-    scala {
+    /*scala {
         sourceSets["test"]
         sourceSets["main"]
     }
     java {
         sourceSets["test"]
         sourceSets["main"]
-    }
+    }*/
 }
 
 dependencies {
