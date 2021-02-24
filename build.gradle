@@ -14,7 +14,7 @@ def PLAY_VERSION = "2.7.9"
 play {
     platform {
         playVersion = PLAY_VERSION
-        scalaVersion = '2.13.4'
+        scalaVersion = '2.13.5'
         javaVersion = JavaVersion.VERSION_11
     }
 
