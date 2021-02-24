@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage ('build') {
             steps {
-                sh 'chmod +x ./gradle'
-                sh './gradle build'
+                sh 'chmod +x ./gradlew'
+                sh './gradlew build'
             }
         }
     }
