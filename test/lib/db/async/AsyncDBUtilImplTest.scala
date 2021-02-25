@@ -3,6 +3,7 @@ package lib.db.async
 import akka.actor.ActorSystem
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{Sink, Source}
+import akka.testkit.TestProbe
 import demo.UnitSpec
 import domain.UserInfo
 import lib.db.DBUtil
@@ -22,9 +23,11 @@ class AsyncDBUtilImplTest extends UnitSpec {
 
     @Test
     override def registerTest(): Unit = {
+        val probe = TestProbe()
         val source = Source.actorRef[UserInfo](1, OverflowStrategy.fail)
-        val actorRef = source.throttle(1, 100.millis).to(Sink.foreach(println)).run()
+        val actorRef = source.throttle(1, 100.millis).to(Sink.actorRef(probe.ref, onCompleteMessage = None)).run()
         asyncDBUtil.select("select * from user_infos", classOf[UserInfo], null)(actorRef)
+        probe.expectMsgAllClassOf(500.millis, classOf[UserInfo])
     }
 
     "Search UserInfo" must {

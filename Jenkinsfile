@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('build') {
             steps {
-                sh 'gradle -Penv=dev check assemble'
+                sh 'gradle check assemble -Penv=dev -Dconfig.resource=dev.conf'
             }
         }
     }
