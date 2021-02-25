@@ -30,10 +30,9 @@ class AsyncDBUtilImplTest extends UnitSpec {
         probe.expectMsgAllClassOf(500.millis, classOf[UserInfo])
     }
 
-    "Search UserInfo" must {
+    @Test
+    def testSync(): Unit = {
         val userInfos = dBUtil.select("select * from user_infos", classOf[UserInfo], null)
-        "userInfo result" in {
-            userInfos.size must not be 0
-        }
+        userInfos.size must not be 0
     }
 }
