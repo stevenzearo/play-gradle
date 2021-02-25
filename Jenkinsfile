@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('build') {
             steps {
-                sh 'gradle -Penv=dev check assemble --parallel'
+                sh 'gradle -Penv=dev check assemble'
             }
         }
     }
