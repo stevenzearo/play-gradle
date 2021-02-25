@@ -60,7 +60,7 @@ dependencies {
     testCompile "com.typesafe.akka:akka-stream-testkit_2.13:2.5.31"
     compile "com.typesafe.play:play-guice_2.13:${PLAY_VERSION}"
     compile "com.typesafe.play:play-logback_2.13:${PLAY_VERSION}"
-    compile "mysql:mysql-connector-java:8.0.15"
+    compile "mysql:mysql-connector-java:8.0.16"
     compile "com.typesafe.play:play-jdbc_2.13:${PLAY_VERSION}"
     compile "org.mongodb.scala:mongo-scala-driver_2.13:4.1.1"
 }
