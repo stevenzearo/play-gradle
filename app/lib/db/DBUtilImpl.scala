@@ -20,7 +20,7 @@ class DBUtilImpl @Inject()(implicit database: Database) extends DBUtil {
         val sql = s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = \'$id\'"
         val entities: ListBuffer[T] = executeQuery[T](tableClass, sql, null)
         if (entities.size > 1) throw new Exception("duplicated primary key")
-        if (entities.nonEmpty) Option[T](entities.head) else Option(null)
+        if (entities.nonEmpty) Option[T](entities.head) else Option.empty[T]
     }
 
     override def select[T](sql: String, entitiesClass: Class[T], params: Array[Object]): mutable.ListBuffer[T] = {

@@ -1,7 +1,7 @@
 package lib.db.async
 
 import java.lang.reflect.Field
-import java.sql.{PreparedStatement, ResultSet}
+import java.sql.{Connection, PreparedStatement, ResultSet}
 
 import akka.actor.{ActorRef, ActorSystem}
 import javax.inject.Inject
@@ -19,30 +19,30 @@ class AsyncDBUtilImpl @Inject()(implicit database: Database, system: ActorSystem
     private val logger = org.slf4j.LoggerFactory.getLogger(classOf[AsyncDBUtilImpl])
 
     override def get[T >: Null, A](aClass: Class[T], id: A)(ref: ActorRef): Unit = {
-        val tableClass = TableClass[T](aClass)
-        val sql = s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = \'$id\'"
+        val tableClass: TableClass[T] = TableClass[T](aClass)
+        val sql: String = s"select * from ${tableClass.tableName} where ${tableClass.primaryKeyColumn} = \'$id\'"
         executeQuery[T](tableClass, sql, null)(ref: ActorRef)
     }
 
     override def select[T](sql: String, entitiesClass: Class[T], params: Array[Object])(ref: ActorRef): Unit = {
-        val entityClass = EntityClass[T](entitiesClass)
+        val entityClass: EntityClass[T] = EntityClass[T](entitiesClass)
         executeQuery(entityClass, sql, params)(ref)
     }
 
     override def create[T](aClass: Class[T], t: T)(ref: ActorRef): Unit = {
-        val tableClass = TableClass[T](aClass)
-        val tableName = tableClass.tableName
-        val fieldValMap = tableClass.fieldMap.map(entry => entry._1 -> entry._2.get(t))
+        val tableClass: TableClass[T] = TableClass[T](aClass)
+        val tableName: String = tableClass.tableName
+        val fieldValMap: Map[String, AnyRef] = tableClass.fieldMap.map(entry => entry._1 -> entry._2.get(t))
         if (fieldValMap.isEmpty) throw new Exception("table columns can not be empty")
         val columnsStr: String = fieldValMap.keys.reduce((k1, k2) => k1 + ", " + k2)
-        val paramsStr = fieldValMap.values.map(v => s"\'$v\'").reduce((v1, v2) => s"$v1, $v2")
+        val paramsStr: String = fieldValMap.values.map(v => s"\'$v\'").reduce((v1, v2) => s"$v1, $v2")
         val sql: String = s"insert into $tableName ($columnsStr) values ($paramsStr)"
         execute(tableClass, sql, fieldValMap.values.toArray)(ref)
     }
 
     override def delete[T, A](aClass: Class[T], id: A)(ref: ActorRef): Unit = {
-        val tableClass = TableClass[T](aClass)
-        val tableName = tableClass.tableName
+        val tableClass: TableClass[T] = TableClass[T](aClass)
+        val tableName: String = tableClass.tableName
         val primaryKey: String = tableClass.primaryKeyColumn
         val sql: String = s"delete from $tableName where $primaryKey = '$id'"
         execute(tableClass, sql, null)(ref)
@@ -83,20 +83,27 @@ class AsyncDBUtilImpl @Inject()(implicit database: Database, system: ActorSystem
         })
     }
 
+    private def getResultSet[T](sql: String, params: Array[Object], connection: Connection): ResultSet = {
+        val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
+        setParam(preparedStatement, params)
+        val resultSet: ResultSet = preparedStatement.executeQuery()
+        resultSet
+    }
+
     private def setParam(preparedStatement: PreparedStatement, params: Array[Object]): Unit = {
         val paramPairs: List[(Int, Object)] = getParamPair(params)
         paramPairs.foreach(paramPair => preparedStatement.setObject(paramPair._1, paramPair._2))
     }
 
     private def constructEntity[T](abstractEntity: AbstractEntity[T], fieldMap: Map[String, Field], resultSet: ResultSet): T = {
-        val fieldMapVal = fieldMap.map(entry => (entry._1, resultSet.getObject(entry._1)))
+        val fieldMapVal: Map[String, AnyRef] = fieldMap.map(entry => (entry._1, resultSet.getObject(entry._1)))
         val entity: T = abstractEntity.entityClass.getDeclaredConstructor().newInstance()
         abstractEntity.entityClass.getDeclaredFields.foreach(field => {
             field.setAccessible(true)
-            val columnAnnotation = field.getAnnotation(classOf[Column])
+            val columnAnnotation: Column = field.getAnnotation(classOf[Column])
             if (columnAnnotation != null) {
-                val columnName = field.getAnnotation(classOf[Column]).name()
-                val filedVal = fieldMapVal.get(columnName).orNull
+                val columnName: String = field.getAnnotation(classOf[Column]).name()
+                val filedVal: AnyRef = fieldMapVal.get(columnName).orNull
                 field.set(entity, filedVal)
             }
         })
