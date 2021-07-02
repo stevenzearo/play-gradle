@@ -13,7 +13,7 @@ class UserInfo() {
     @Column(name = "name") var name: String = _
     @Column(name = "age") var age: Int = _
 
-    def this(id: Long, name: String, age: Int) {
+    def this(id: Long, name: String, age: Int) = {
         this()
         this.id = id
         this.name = name

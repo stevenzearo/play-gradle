@@ -1,2 +1,6 @@
-rootProject.name = 'play-gradle'
-
+include 'backend:user-info-service',
+        'backend:user-info-service-interface',
+        'backend:user-info-service-migration',
+        'backend:chat-service',
+        'backend:chat-serivce-interface',
+        'backend:chat-serivce-migration'

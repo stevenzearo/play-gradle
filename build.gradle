@@ -7,60 +7,65 @@ plugins {
 group 'steve.playframework'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 11
-
 def PLAY_VERSION = "2.7.9"
 
-play {
-    platform {
-        playVersion = PLAY_VERSION
-        scalaVersion = '2.13.5'
-        javaVersion = JavaVersion.VERSION_11
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'org.gradle.playframework'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            name "maven-repo"
+            url "https://repo.maven.apache.org/maven2"
+        }
+        maven {
+            name "lightbend-maven-release"
+            url "https://repo.lightbend.com/lightbend/maven-releases"
+        }
+        ivy {
+            name "lightbend-ivy-release"
+            url "https://repo.lightbend.com/lightbend/ivy-releases"
+            layout "ivy"
+        }
     }
 
-    injectedRoutesGenerator = true
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    test {
+        useJUnitPlatform()
+    }
+
+    play {
+        platform {
+            scalaVersion = '2.13.5'
+            javaVersion = JavaVersion.VERSION_11
+            playVersion = PLAY_VERSION
+        }
+
+        injectedRoutesGenerator = true
+    }
 }
 
-
-repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        name "maven-repo"
-        url "https://repo.maven.apache.org/maven2"
-    }
-    maven {
-        name "lightbend-maven-release"
-        url "https://repo.lightbend.com/lightbend/maven-releases"
-    }
-    ivy {
-        name "lightbend-ivy-release"
-        url "https://repo.lightbend.com/lightbend/ivy-releases"
-        layout "ivy"
+configure(subprojects.findAll { it.name.endsWith('-service') }) {
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+        testCompile "org.scalatestplus.play:scalatestplus-play_2.13:4.0.3"
+        testCompile "com.typesafe.akka:akka-stream-testkit_2.13:2.5.31"
+        compile "com.typesafe.play:play-guice_2.13:${PLAY_VERSION}"
+        compile "com.typesafe.play:play-logback_2.13:${PLAY_VERSION}"
+        compile "mysql:mysql-connector-java:8.0.16"
+        compile "com.typesafe.play:play-jdbc_2.13:${PLAY_VERSION}"
+        compile "org.mongodb.scala:mongo-scala-driver_2.13:4.1.1"
     }
 }
 
-test {
-    useJUnitPlatform()
-    /*scala {
-        sourceSets["test"]
-        sourceSets["main"]
+project(':backend:user-info-service') {
+    dependencies {
     }
-    java {
-        sourceSets["test"]
-        sourceSets["main"]
-    }*/
-}
-
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
-    testCompile "org.scalatestplus.play:scalatestplus-play_2.13:4.0.3"
-    testCompile "com.typesafe.akka:akka-stream-testkit_2.13:2.5.31"
-    compile "com.typesafe.play:play-guice_2.13:${PLAY_VERSION}"
-    compile "com.typesafe.play:play-logback_2.13:${PLAY_VERSION}"
-    compile "mysql:mysql-connector-java:8.0.16"
-    compile "com.typesafe.play:play-jdbc_2.13:${PLAY_VERSION}"
-    compile "org.mongodb.scala:mongo-scala-driver_2.13:4.1.1"
 }

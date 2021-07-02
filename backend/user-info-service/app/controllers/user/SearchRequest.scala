@@ -6,7 +6,7 @@ package controllers.user
 class SearchRequest {
     var name: String = _
 
-    def this(name: String) {
+    def this(name: String) = {
         this()
         this.name = name
     }

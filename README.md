@@ -1,6 +1,6 @@
 # Play Gradle Project
 ### Introduce
-this is a test project for using playframework build with gradle (by using plugin org.gradle.playframework:playframework:0.9)
+this is a test project for using playframework build with gradle (by using plugin org.gradle.playframework:playframework:0.10)
 ### project version relevant
 1. playframework version 2.6.7
 2. scala version 2.12

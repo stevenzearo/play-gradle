@@ -8,6 +8,7 @@ import demo.UnitSpec
 import domain.UserInfo
 import lib.db.DBUtil
 import org.junit.jupiter.api.Test
+import services.UserInfoService
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
@@ -17,7 +18,7 @@ import scala.concurrent.duration._
  */
 class AsyncDBUtilImplTest extends UnitSpec {
     val dBUtil: DBUtil = app.injector.instanceOf(classOf[DBUtil])
-    val asyncDBUtil: AsyncDBUtil = app.injector.instanceOf(classOf[AsyncDBUtil])
+    val asyncUserInfoDao: UserInfoService = app.injector.instanceOf(classOf[UserInfoService])
     implicit val system: ActorSystem = app.actorSystem
     implicit val ec: ExecutionContextExecutor = system.dispatcher
 
@@ -26,7 +27,8 @@ class AsyncDBUtilImplTest extends UnitSpec {
         val probe = TestProbe()
         val source = Source.actorRef[UserInfo](1, OverflowStrategy.fail)
         val actorRef = source.throttle(1, 100.millis).to(Sink.actorRef(probe.ref, onCompleteMessage = None)).run()
-        asyncDBUtil.select("select * from user_infos", classOf[UserInfo], null)(actorRef)
+        val eventualUserInfos = asyncUserInfoDao.select("select * from user_infos", null)
+
         probe.expectMsgAllClassOf(500.millis, classOf[UserInfo])
     }
 

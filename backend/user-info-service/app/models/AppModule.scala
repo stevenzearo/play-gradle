@@ -1,9 +1,8 @@
 package models
 
 import java.time.Clock
-
 import com.google.inject.AbstractModule
-import domain.{UserInfo, UserInfoAsyncDAO, UserInfoDAO}
+import domain.{UserInfo, UserInfoDAO}
 import lib.db.async.{AsyncDBUtil, AsyncDBUtilImpl}
 import lib.db.{DAO, DBUtil, DBUtilImpl}
 import services.{ApplicationTimer, AtomicCounter, Counter, UserInfoService}
@@ -21,9 +20,10 @@ import services.{ApplicationTimer, AtomicCounter, Counter, UserInfoService}
 class AppModule extends AbstractModule {
   override def configure(): Unit = {
     // Use the system clock as the default implementation of Clock
+//    bind(classOf[UserInfoExecutionContext]).asEagerSingleton()
+    bind(classOf[DBUtil]).to(classOf[DBUtilImpl]).asEagerSingleton()
     bind(classOf[AsyncDBUtil]).to(classOf[AsyncDBUtilImpl]).asEagerSingleton()
     bind(classOf[UserInfoDAO]).asEagerSingleton()
-    bind(classOf[UserInfoAsyncDAO]).asEagerSingleton()
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
     // Ask Guice to create an instance of ApplicationTimer when the
     // application starts.

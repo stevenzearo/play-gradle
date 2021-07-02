@@ -7,7 +7,7 @@ import domain.UserInfo
  */
 class SearchResponse {
     var userInfos: Array[UserInfo] = _
-    def this(userInfos: Array[UserInfo]) {
+    def this(userInfos: Array[UserInfo]) = {
         this()
         this.userInfos = userInfos
     }
