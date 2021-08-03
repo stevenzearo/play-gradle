@@ -1,13 +1,13 @@
 plugins {
     id 'java'
-    id 'org.gradle.playframework' version '0.10'
+    id 'org.gradle.playframework' version '0.12'
     id 'idea'
 }
 
 group 'steve.playframework'
 version '1.0-SNAPSHOT'
 
-def PLAY_VERSION = "2.7.9"
+def PLAY_VERSION = "2.8.8"
 
 allprojects {
     apply plugin: 'java'
@@ -52,16 +52,16 @@ allprojects {
 
 configure(subprojects.findAll { it.name.endsWith('-service') }) {
     dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
-        testCompile "org.scalatestplus.play:scalatestplus-play_2.13:4.0.3"
-        testCompile "com.typesafe.akka:akka-stream-testkit_2.13:2.5.31"
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+        testCompile "org.scalatestplus.play:scalatestplus-play_2.13:5.1.0"
+        testCompile "com.typesafe.akka:akka-stream-testkit_2.13:2.6.15"
         compile "com.typesafe.play:play-guice_2.13:${PLAY_VERSION}"
         compile "com.typesafe.play:play-logback_2.13:${PLAY_VERSION}"
-        compile "mysql:mysql-connector-java:8.0.16"
+        compile "mysql:mysql-connector-java:8.0.26"
         compile "com.typesafe.play:play-jdbc_2.13:${PLAY_VERSION}"
-        compile "org.mongodb.scala:mongo-scala-driver_2.13:4.1.1"
+        compile "org.mongodb.scala:mongo-scala-driver_2.13:4.3.0"
     }
 }
 
